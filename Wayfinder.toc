@@ -1,0 +1,11 @@
+## Interface: 110002
+## Version: 1.0.0-alpha.1
+## Title: Wayfinder
+## Author: Wyomarus
+## Notes: A simple addon to help you find your way around the world of Azeroth.
+## X-Curse-Project-ID: 1110568
+## X-Wago-ID: Q6aEQ76W
+
+Libs\embeds.xml
+
+Wayfinder.lua

@@ -1,0 +1,43 @@
+name: Luacheck
+
+on:
+  workflow_dispatch:
+
+jobs:
+  luacheck:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Lua
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lua5.1
+        sudo apt-get install -y luarocks
+
+    - name: Install Luacheck
+      run: sudo luarocks install luacheck
+
+    - name: Download WoW Lua Globals
+      run: wget -O .luacheck-wow.lua https://raw.githubusercontent.com/mpeterv/luacheck/master/stds/wow.lua
+
+    - name: Create .luacheckrc file
+      run: |
+        cat << EOF > .luacheckrc
+        stds = {
+          ".luacheck-wow",  -- Reference the downloaded WoW globals
+        }
+
+        globals = {
+          "Wayfinder"  -- Replace with your addon globals
+        }
+
+        files["Libs/"] = {
+          ignore = true  -- Exclude the Libs folder
+        }
+        EOF
+
+    - name: Run Luacheck
+      run: luacheck . --config .luacheckrc --no-color
