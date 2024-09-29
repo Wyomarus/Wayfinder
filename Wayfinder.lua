@@ -583,5 +583,5 @@ do -- Slash commands
     local SlashCmdList = _G["SlashCmdList"]
     SlashCmdList["WAYFINDER"] = HandleSlashCommands
     _G.SLASH_WAYFINDER1 = "/wayfinder"
-    SLASH_WAYFINDER2 = "/wf"
+    _G.SLASH_WAYFINDER2 = "/wf"
 end
