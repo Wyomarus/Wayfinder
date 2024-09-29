@@ -206,7 +206,7 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         end
     end
 
-    local function onUpdate(...)
+    local function onUpdate()
         for _, element in ipairs(elements) do
             processElement(element)
         end
@@ -245,8 +245,8 @@ end
 
 do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local deg = math.deg
-    local print = print
-    local format = string.format
+--    local print = print
+--    local format = string.format
 
     local Enum = _G.Enum
 
@@ -266,7 +266,7 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
 
 --    local GetQuestPOIs = _G["GetQuestPOIs"]
 
-    local QuestOffer = C_QuestOffer
+--    local QuestOffer = C_QuestOffer
 --    local QuestOfferGetMap = QuestOffer.GetMap
 
     local SuperTrack = C_SuperTrack
@@ -336,32 +336,32 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local mapTree = getAllTheMaps()
     _p.MapTree = mapTree
 
-    local function foo()
-        local map = GetBestMapForUnit("player")
-        if not map then return end
-        local pos = GetPlayerMapPosition(map, "player")
-        if not pos then return end
-        local cid, wpos = GetWorldPosFromMapPos(map, pos)
-        if not cid or not wpos then return end
-        local x, y, i = GetPlayerWorldPosition()
-        if not x or not y or not i then return end
-        print("--------------------------------------------\n",
-            "Map:", map,
-            format("Pos: (%.4f, %.4f)\n", pos.x, pos.y),
-            format("   World: (%.2f, %.2f)\n", wpos.x, wpos.y),
-            format("  Player: (%.2f, %.2f) in %d", x, y, i))
-
-        local function printMapInfo(map)
-            local mapInfo = GetMapInfo(map)
-            if not mapInfo then return end
-            print(">>> Map info for map:", map)
-            printTable(mapInfo)
-            printMapInfo(mapInfo.parentMapID)
-        end
-
-        printMapInfo(map)
-    end
-    _p.Foo = foo
+--    local function foo()
+--        local map = GetBestMapForUnit("player")
+--        if not map then return end
+--        local pos = GetPlayerMapPosition(map, "player")
+--        if not pos then return end
+--        local cid, wpos = GetWorldPosFromMapPos(map, pos)
+--        if not cid or not wpos then return end
+--        local x, y, i = GetPlayerWorldPosition()
+--        if not x or not y or not i then return end
+--        print("--------------------------------------------\n",
+--            "Map:", map,
+--            format("Pos: (%.4f, %.4f)\n", pos.x, pos.y),
+--            format("   World: (%.2f, %.2f)\n", wpos.x, wpos.y),
+--            format("  Player: (%.2f, %.2f) in %d", x, y, i))
+--
+--        local function printMapInfo(map)
+--            local mapInfo = GetMapInfo(map)
+--            if not mapInfo then return end
+--            print(">>> Map info for map:", map)
+--            printTable(mapInfo)
+--            printMapInfo(mapInfo.parentMapID)
+--        end
+--
+--        printMapInfo(map)
+--    end
+--    _p.Foo = foo
 
     -- local functions
     -- forward declarations
@@ -580,6 +580,7 @@ do -- Slash commands
         end
     end
 
+    local SlashCmdList = _G["SlashCmdList"]
     SlashCmdList["WAYFINDER"] = HandleSlashCommands
     SLASH_WAYFINDER1 = "/wayfinder"
     SLASH_WAYFINDER2 = "/wf"
