@@ -27,6 +27,10 @@ local _C = addon.Constants
 
 assert(LibStub, addonName .. " requires LibStub")
 
+-- Cache global references
+local print = print
+local format = string.format
+
 -- Global helper functions --
 
 -- Binds a method to an object, creating a closure
@@ -120,15 +124,15 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         return (degrees % 360 + 360) % 360 -- normalize to [0, 360)
     end
 
-    local function asRadians(degrees)
-        degrees = 360 - degrees -- adjust for counterclockwise rotation
-        return rad(degrees)
-    end
+--    local function asRadians(degrees)
+--        degrees = 360 - degrees -- adjust for counterclockwise rotation
+--        return rad(degrees)
+--    end
 
-    local function getRelativeAngle(angle1, angle2)
-        local relativeAngle = angle1 - angle2
-        return (relativeAngle % 360 + 360) % 360
-    end
+--    local function getRelativeAngle(angle1, angle2)
+--        local relativeAngle = angle1 - angle2
+--        return (relativeAngle % 360 + 360) % 360
+--    end
 
     -- Normalize angle to [-180, 180)
     local function normalizeAngle180(angle)
@@ -377,7 +381,7 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
         local destX, destY = trackingFunction()
         if not (destX and destY) then return end
 
-        local angle, distance = GetWorldVector(instanceId, playerX, playerY, destX, destY)
+        local angle, _ = GetWorldVector(instanceId, playerX, playerY, destX, destY)
         if not angle then return end
 
         return 360 - deg(angle)
@@ -574,9 +578,7 @@ do -- Slash commands
         end
     end
 
-    local SlashCmdList = _G["SlashCmdList"]
-    -- Register the slash command
+    SlashCmdList["WAYFINDER"] = HandleSlashCommands
     SLASH_WAYFINDER1 = "/wayfinder"
     SLASH_WAYFINDER2 = "/wf"
-    SlashCmdList["WAYFINDER"] = HandleSlashCommands
 end
