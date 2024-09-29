@@ -253,8 +253,8 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local Map = C_Map
     local GetUserWaypoint = Map.GetUserWaypoint
     local GetBestMapForUnit = Map.GetBestMapForUnit
-    local GetWorldPosFromMapPos = Map.GetWorldPosFromMapPos
-    local GetPlayerMapPosition = Map.GetPlayerMapPosition
+--    local GetWorldPosFromMapPos = Map.GetWorldPosFromMapPos
+--    local GetPlayerMapPosition = Map.GetPlayerMapPosition
     local GetMapInfo = Map.GetMapInfo
     local GetMapChildrenInfo = Map.GetMapChildrenInfo
 
@@ -582,6 +582,6 @@ do -- Slash commands
 
     local SlashCmdList = _G["SlashCmdList"]
     SlashCmdList["WAYFINDER"] = HandleSlashCommands
-    SLASH_WAYFINDER1 = "/wayfinder"
+    _G.SLASH_WAYFINDER1 = "/wayfinder"
     SLASH_WAYFINDER2 = "/wf"
 end
