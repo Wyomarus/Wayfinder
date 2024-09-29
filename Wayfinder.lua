@@ -261,13 +261,13 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local QuestLog = C_QuestLog
     local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
     local QuestLogGetInfo = QuestLog.GetInfo
-    local QuestLogIsOnMap = QuestLog.IsOnMap
+--    local QuestLogIsOnMap = QuestLog.IsOnMap
     local QuestLogGetNextWaypoint = QuestLog.GetNextWaypoint
 
-    local GetQuestPOIs = _G["GetQuestPOIs"]
+--    local GetQuestPOIs = _G["GetQuestPOIs"]
 
     local QuestOffer = C_QuestOffer
-    local QuestOfferGetMap = QuestOffer.GetMap
+--    local QuestOfferGetMap = QuestOffer.GetMap
 
     local SuperTrack = C_SuperTrack
     local IsSuperTrackingAnything = SuperTrack.IsSuperTrackingAnything
@@ -286,14 +286,15 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     addon.Dependencies["HereBeDragons-2.0"] = hbd
 
     local GetPlayerWorldPosition = bind(hbd, hbd.GetPlayerWorldPosition)
-    local GetPlayerZone = bind(hbd, hbd.GetPlayerZone)
-    local GetPlayerZonePosition = bind(hbd, hbd.GetPlayerZonePosition)
-    local GetUnitWorldPosition = bind(hbd, hbd.GetUnitWorldPosition)
+--    local GetPlayerZone = bind(hbd, hbd.GetPlayerZone)
+--    local GetPlayerZonePosition = bind(hbd, hbd.GetPlayerZonePosition)
+--    local GetUnitWorldPosition = bind(hbd, hbd.GetUnitWorldPosition)
 
     local GetWorldVector = bind(hbd, hbd.GetWorldVector)
     local GetWorldCoordinatesFromZone = bind(hbd, hbd.GetWorldCoordinatesFromZone)
 
     -- helper functions
+--[[
     local function GetContinentIdFromMapId(uiMapId)
         local mapInfo = C_Map.GetMapInfo(uiMapId)
         if not mapInfo then return end
@@ -306,6 +307,7 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
             return GetContinentIdFromMapId(parent)
         end
     end
+]]
 
     -- Get all the maps in the game recursively as a tree structure
     local function getAllTheMaps(parentMapID)
