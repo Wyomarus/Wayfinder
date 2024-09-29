@@ -27,6 +27,10 @@ local _C = addon.Constants
 
 assert(LibStub, addonName .. " requires LibStub")
 
+-- Cache global references
+local print = print
+local format = string.format
+
 -- Global helper functions --
 
 -- Binds a method to an object, creating a closure
@@ -120,15 +124,15 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         return (degrees % 360 + 360) % 360 -- normalize to [0, 360)
     end
 
-    local function asRadians(degrees)
-        degrees = 360 - degrees -- adjust for counterclockwise rotation
-        return rad(degrees)
-    end
+--    local function asRadians(degrees)
+--        degrees = 360 - degrees -- adjust for counterclockwise rotation
+--        return rad(degrees)
+--    end
 
-    local function getRelativeAngle(angle1, angle2)
-        local relativeAngle = angle1 - angle2
-        return (relativeAngle % 360 + 360) % 360
-    end
+--    local function getRelativeAngle(angle1, angle2)
+--        local relativeAngle = angle1 - angle2
+--        return (relativeAngle % 360 + 360) % 360
+--    end
 
     -- Normalize angle to [-180, 180)
     local function normalizeAngle180(angle)
@@ -202,7 +206,7 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         end
     end
 
-    local function onUpdate(...)
+    local function onUpdate()
         for _, element in ipairs(elements) do
             processElement(element)
         end
@@ -241,29 +245,29 @@ end
 
 do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local deg = math.deg
-    local print = print
-    local format = string.format
+--    local print = print
+--    local format = string.format
 
     local Enum = _G.Enum
 
     local Map = C_Map
     local GetUserWaypoint = Map.GetUserWaypoint
     local GetBestMapForUnit = Map.GetBestMapForUnit
-    local GetWorldPosFromMapPos = Map.GetWorldPosFromMapPos
-    local GetPlayerMapPosition = Map.GetPlayerMapPosition
+--    local GetWorldPosFromMapPos = Map.GetWorldPosFromMapPos
+--    local GetPlayerMapPosition = Map.GetPlayerMapPosition
     local GetMapInfo = Map.GetMapInfo
     local GetMapChildrenInfo = Map.GetMapChildrenInfo
 
     local QuestLog = C_QuestLog
     local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
     local QuestLogGetInfo = QuestLog.GetInfo
-    local QuestLogIsOnMap = QuestLog.IsOnMap
+--    local QuestLogIsOnMap = QuestLog.IsOnMap
     local QuestLogGetNextWaypoint = QuestLog.GetNextWaypoint
 
-    local GetQuestPOIs = _G["GetQuestPOIs"]
+--    local GetQuestPOIs = _G["GetQuestPOIs"]
 
-    local QuestOffer = C_QuestOffer
-    local QuestOfferGetMap = QuestOffer.GetMap
+--    local QuestOffer = C_QuestOffer
+--    local QuestOfferGetMap = QuestOffer.GetMap
 
     local SuperTrack = C_SuperTrack
     local IsSuperTrackingAnything = SuperTrack.IsSuperTrackingAnything
@@ -282,14 +286,15 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     addon.Dependencies["HereBeDragons-2.0"] = hbd
 
     local GetPlayerWorldPosition = bind(hbd, hbd.GetPlayerWorldPosition)
-    local GetPlayerZone = bind(hbd, hbd.GetPlayerZone)
-    local GetPlayerZonePosition = bind(hbd, hbd.GetPlayerZonePosition)
-    local GetUnitWorldPosition = bind(hbd, hbd.GetUnitWorldPosition)
+--    local GetPlayerZone = bind(hbd, hbd.GetPlayerZone)
+--    local GetPlayerZonePosition = bind(hbd, hbd.GetPlayerZonePosition)
+--    local GetUnitWorldPosition = bind(hbd, hbd.GetUnitWorldPosition)
 
     local GetWorldVector = bind(hbd, hbd.GetWorldVector)
     local GetWorldCoordinatesFromZone = bind(hbd, hbd.GetWorldCoordinatesFromZone)
 
     -- helper functions
+--[[
     local function GetContinentIdFromMapId(uiMapId)
         local mapInfo = C_Map.GetMapInfo(uiMapId)
         if not mapInfo then return end
@@ -302,6 +307,7 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
             return GetContinentIdFromMapId(parent)
         end
     end
+]]
 
     -- Get all the maps in the game recursively as a tree structure
     local function getAllTheMaps(parentMapID)
@@ -330,32 +336,32 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local mapTree = getAllTheMaps()
     _p.MapTree = mapTree
 
-    local function foo()
-        local map = GetBestMapForUnit("player")
-        if not map then return end
-        local pos = GetPlayerMapPosition(map, "player")
-        if not pos then return end
-        local cid, wpos = GetWorldPosFromMapPos(map, pos)
-        if not cid or not wpos then return end
-        local x, y, i = GetPlayerWorldPosition()
-        if not x or not y or not i then return end
-        print("--------------------------------------------\n",
-            "Map:", map,
-            format("Pos: (%.4f, %.4f)\n", pos.x, pos.y),
-            format("   World: (%.2f, %.2f)\n", wpos.x, wpos.y),
-            format("  Player: (%.2f, %.2f) in %d", x, y, i))
-
-        local function printMapInfo(map)
-            local mapInfo = GetMapInfo(map)
-            if not mapInfo then return end
-            print(">>> Map info for map:", map)
-            printTable(mapInfo)
-            printMapInfo(mapInfo.parentMapID)
-        end
-
-        printMapInfo(map)
-    end
-    _p.Foo = foo
+--    local function foo()
+--        local map = GetBestMapForUnit("player")
+--        if not map then return end
+--        local pos = GetPlayerMapPosition(map, "player")
+--        if not pos then return end
+--        local cid, wpos = GetWorldPosFromMapPos(map, pos)
+--        if not cid or not wpos then return end
+--        local x, y, i = GetPlayerWorldPosition()
+--        if not x or not y or not i then return end
+--        print("--------------------------------------------\n",
+--            "Map:", map,
+--            format("Pos: (%.4f, %.4f)\n", pos.x, pos.y),
+--            format("   World: (%.2f, %.2f)\n", wpos.x, wpos.y),
+--            format("  Player: (%.2f, %.2f) in %d", x, y, i))
+--
+--        local function printMapInfo(map)
+--            local mapInfo = GetMapInfo(map)
+--            if not mapInfo then return end
+--            print(">>> Map info for map:", map)
+--            printTable(mapInfo)
+--            printMapInfo(mapInfo.parentMapID)
+--        end
+--
+--        printMapInfo(map)
+--    end
+--    _p.Foo = foo
 
     -- local functions
     -- forward declarations
@@ -377,7 +383,7 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
         local destX, destY = trackingFunction()
         if not (destX and destY) then return end
 
-        local angle, distance = GetWorldVector(instanceId, playerX, playerY, destX, destY)
+        local angle, _ = GetWorldVector(instanceId, playerX, playerY, destX, destY)
         if not angle then return end
 
         return 360 - deg(angle)
@@ -575,8 +581,7 @@ do -- Slash commands
     end
 
     local SlashCmdList = _G["SlashCmdList"]
-    -- Register the slash command
-    SLASH_WAYFINDER1 = "/wayfinder"
-    SLASH_WAYFINDER2 = "/wf"
     SlashCmdList["WAYFINDER"] = HandleSlashCommands
+    _G.SLASH_WAYFINDER1 = "/wayfinder"
+    _G.SLASH_WAYFINDER2 = "/wf"
 end
