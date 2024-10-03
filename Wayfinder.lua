@@ -272,8 +272,8 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
 --    local GetMapChildrenInfo = Map.GetMapChildrenInfo
 
     local QuestLog = C_QuestLog
-    local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
-    local QuestLogGetInfo = QuestLog.GetInfo
+--    local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
+--    local QuestLogGetInfo = QuestLog.GetInfo
 --    local QuestLogIsOnMap = QuestLog.IsOnMap
     local QuestLogGetNextWaypoint = QuestLog.GetNextWaypoint
 
@@ -404,8 +404,8 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
 
     local function functionNotImplemented() end
 
-    local lastQuestInfo = nil
-    local function superTrackingQuest()        
+--    local lastQuestInfo = nil
+    local function superTrackingQuest()
         local questID = GetSuperTrackedQuestID()
         assert(questID, "Expected questID to be a number")
 
