@@ -21,6 +21,7 @@ globals = {
 	-- WoW
 	"CreateFrame",
     "GetPlayerFacing",
+    "IsInInstance",
     "UIParent",
     "C_Map",
     "C_QuestLog",

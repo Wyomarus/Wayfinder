@@ -54,6 +54,7 @@ local function printTable(table)
         print(format("%s:", key), value)
     end
 end
+_p.printTable = printTable
 
 do -- CompassBanner manages the frame and elements of the compass banner.
     -- Cache global references
@@ -108,7 +109,7 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         frame:SetPoint("TOP", 0, -10)
 
         -- Create a texture for the vertical line
-        local line = frame:CreateTexture(nil, "BACKGROUND")
+        local line = frame:CreateTexture(nil, "OVERLAY")
         line:SetColorTexture(1, 1, 1, 1)               -- White color, fully opaque
         line:SetSize(2, frame:GetHeight())             -- Width of 2 pixels, height same as the frame
         line:SetPoint("CENTER", frame, "CENTER", 0, 0) -- Centered vertically in the frame
@@ -212,7 +213,19 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         end
     end
 
-    addon.CompassBannerFrame:SetScript("OnUpdate", onUpdate)
+    local function enableCompassBanner()
+        addon.CompassBannerFrame:Show()
+        addon.CompassBannerFrame:SetScript("OnUpdate", onUpdate)
+    end
+    _p.enableCompassBanner = enableCompassBanner
+
+    local function disableCompassBanner()
+        addon.CompassBannerFrame:Hide()
+        addon.CompassBannerFrame:SetScript("OnUpdate", nil)
+    end
+    _p.disableCompassBanner = disableCompassBanner
+
+    enableCompassBanner()
 end
 
 do -- CardinalPoints manages the cardinal points on the compass banner.
@@ -255,12 +268,12 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local GetBestMapForUnit = Map.GetBestMapForUnit
 --    local GetWorldPosFromMapPos = Map.GetWorldPosFromMapPos
 --    local GetPlayerMapPosition = Map.GetPlayerMapPosition
-    local GetMapInfo = Map.GetMapInfo
-    local GetMapChildrenInfo = Map.GetMapChildrenInfo
+--    local GetMapInfo = Map.GetMapInfo
+--    local GetMapChildrenInfo = Map.GetMapChildrenInfo
 
     local QuestLog = C_QuestLog
-    local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
-    local QuestLogGetInfo = QuestLog.GetInfo
+--    local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
+--    local QuestLogGetInfo = QuestLog.GetInfo
 --    local QuestLogIsOnMap = QuestLog.IsOnMap
     local QuestLogGetNextWaypoint = QuestLog.GetNextWaypoint
 
@@ -310,32 +323,32 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
 ]]
 
     -- Get all the maps in the game recursively as a tree structure
-    local function getAllTheMaps(parentMapID)
-        local function addMaps(mapID, maps)
-            local mapInfo = GetMapInfo(mapID)
-            if not mapInfo then return end
-            local map = {}
-            for key, value in pairs(mapInfo) do
-                map[key] = value
-            end
-            maps[map.name] = map
-            for _, childMap in ipairs(GetMapChildrenInfo(mapID)) do
-                local childMapInfo = GetMapInfo(childMap.mapID)
-                if childMapInfo then
-                    addMaps(childMap.mapID, map)
-                end
-            end
-        end
-
-        local allMaps = {}
-        local rootMapID = parentMapID or 946 -- map ID of Cosmic map
-        addMaps(rootMapID, allMaps)
-        return allMaps
-    end
-
-    local mapTree = getAllTheMaps()
-    _p.MapTree = mapTree
-
+--    local function getAllTheMaps(parentMapID)
+--        local function addMaps(mapID, maps)
+--            local mapInfo = GetMapInfo(mapID)
+--            if not mapInfo then return end
+--            local map = {}
+--            for key, value in pairs(mapInfo) do
+--                map[key] = value
+--            end
+--            maps[map.name] = map
+--            for _, childMap in ipairs(GetMapChildrenInfo(mapID)) do
+--                local childMapInfo = GetMapInfo(childMap.mapID)
+--                if childMapInfo then
+--                    addMaps(childMap.mapID, map)
+--                end
+--            end
+--        end
+--
+--        local allMaps = {}
+--        local rootMapID = parentMapID or 946 -- map ID of Cosmic map
+--        addMaps(rootMapID, allMaps)
+--        return allMaps
+--    end
+--
+--    local mapTree = getAllTheMaps()
+--    _p.MapTree = mapTree
+--
 --    local function foo()
 --        local map = GetBestMapForUnit("player")
 --        if not map then return end
@@ -391,22 +404,21 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
 
     local function functionNotImplemented() end
 
-    local lastQuestInfo = nil
+--    local lastQuestInfo = nil
     local function superTrackingQuest()
         local questID = GetSuperTrackedQuestID()
         assert(questID, "Expected questID to be a number")
 
-        local logIndex = GetLogIndexForQuestID(questID);
-        if logIndex then
-            local questInfo = QuestLogGetInfo(logIndex)
-
-            if questInfo and questInfo ~= lastQuestInfo then
-                print("--------------------------------------------")
-                print("Quest info for questID:", questID)
-                printTable(questInfo)
-                lastQuestInfo = questInfo
-            end
-        end
+        --local logIndex = GetLogIndexForQuestID(questID);
+        --if logIndex then
+        --    local questInfo = QuestLogGetInfo(logIndex)
+        --    if questInfo and questInfo ~= lastQuestInfo then
+        --        print("--------------------------------------------")
+        --        print("Quest info for questID:", questID)
+        --        printTable(questInfo)
+        --        lastQuestInfo = questInfo
+        --    end
+        --end
 
         local mapID, x, y = QuestLogGetNextWaypoint(questID)
         if not mapID or not x or not y then return nil, nil end
@@ -510,14 +522,35 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     )
 end
 
+local function RegisterEvent(event, handler)
+    local eventFrame = CreateFrame("EventFrame")
+    eventFrame:RegisterEvent(event)
+    eventFrame:SetScript("OnEvent", handler)
+end
+
+local IsInInstance = IsInInstance
+local function OnZoneChangedNewArea()
+    local isInInstance = IsInInstance()
+--    local facing = GetPlayerFacing()
+--    print("OnZoneChangedNewArea: isInInstance:", isInInstance, "facing:", facing)
+
+    if not isInInstance then
+        _p.enableCompassBanner()
+    else
+        _p.disableCompassBanner()
+    end
+end
+
+RegisterEvent("ZONE_CHANGED_NEW_AREA", OnZoneChangedNewArea)
+
 do -- Slash commands
     local function ShowCompassBanner()
-        addon.CompassBannerFrame:Show()
+        _p.enableCompassBanner()
         print("Compass banner shown.")
     end
 
     local function HideCompassBanner()
-        addon.CompassBannerFrame:Hide()
+        _p.disableCompassBanner()
         print("Compass banner hidden.")
     end
 
