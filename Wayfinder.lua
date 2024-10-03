@@ -213,19 +213,14 @@ do -- CompassBanner manages the frame and elements of the compass banner.
         end
     end
 
-    local isCompassBannerEnabled = false
-    _p.isCompassBannerEnabled = isCompassBannerEnabled
-
     local function enableCompassBanner()
         addon.CompassBannerFrame:Show()
         addon.CompassBannerFrame:SetScript("OnUpdate", onUpdate)
-        isCompassBannerEnabled = true
     end
     _p.enableCompassBanner = enableCompassBanner
 
     local function disableCompassBanner()
         addon.CompassBannerFrame:Hide()
-        isCompassBannerEnabled = false
         addon.CompassBannerFrame:SetScript("OnUpdate", nil)
     end
     _p.disableCompassBanner = disableCompassBanner
@@ -273,8 +268,8 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
     local GetBestMapForUnit = Map.GetBestMapForUnit
 --    local GetWorldPosFromMapPos = Map.GetWorldPosFromMapPos
 --    local GetPlayerMapPosition = Map.GetPlayerMapPosition
-    local GetMapInfo = Map.GetMapInfo
-    local GetMapChildrenInfo = Map.GetMapChildrenInfo
+--    local GetMapInfo = Map.GetMapInfo
+--    local GetMapChildrenInfo = Map.GetMapChildrenInfo
 
     local QuestLog = C_QuestLog
     local GetLogIndexForQuestID = QuestLog.GetLogIndexForQuestID
@@ -414,17 +409,16 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
         local questID = GetSuperTrackedQuestID()
         assert(questID, "Expected questID to be a number")
 
-        local logIndex = GetLogIndexForQuestID(questID);
-        if logIndex then
-            local questInfo = QuestLogGetInfo(logIndex)
-
-            -- if questInfo and questInfo ~= lastQuestInfo then
-            --     print("--------------------------------------------")
-            --     print("Quest info for questID:", questID)
-            --     printTable(questInfo)
-            --     lastQuestInfo = questInfo
-            -- end
-        end
+        --local logIndex = GetLogIndexForQuestID(questID);
+        --if logIndex then
+        --    local questInfo = QuestLogGetInfo(logIndex)
+        --    if questInfo and questInfo ~= lastQuestInfo then
+        --        print("--------------------------------------------")
+        --        print("Quest info for questID:", questID)
+        --        printTable(questInfo)
+        --        lastQuestInfo = questInfo
+        --    end
+        --end
 
         local mapID, x, y = QuestLogGetNextWaypoint(questID)
         if not mapID or not x or not y then return nil, nil end
@@ -534,7 +528,8 @@ local function RegisterEvent(event, handler)
     eventFrame:SetScript("OnEvent", handler)
 end
 
-local function OnZoneChangedNewArea(self, event, ...)
+local IsInInstance = IsInInstance
+local function OnZoneChangedNewArea()
     local isInInstance = IsInInstance()
 --    local facing = GetPlayerFacing()
 --    print("OnZoneChangedNewArea: isInInstance:", isInInstance, "facing:", facing)
