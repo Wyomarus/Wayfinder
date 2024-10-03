@@ -523,7 +523,7 @@ do -- SuperTracking manages the SuperTracking icon on the compass banner.
 end
 
 local function RegisterEvent(event, handler)
-    local eventFrame = CreateFrame("Frame")
+    local eventFrame = CreateFrame("EventFrame")
     eventFrame:RegisterEvent(event)
     eventFrame:SetScript("OnEvent", handler)
 end
